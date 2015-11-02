@@ -86,16 +86,16 @@ static int am2301_show(struct seq_file *m, void *v)
 	ktime_t start, stop;
 	int nodata_error = 0; // 1 if no data from AM2301
 
-        gpio_direction_output(gpio, 1);
+	gpio_direction_output(gpio, 1);
 
-        udelay(2000);
+	udelay(2000);
 
-        /*
-         * Set pin low and wait for at least 800 us.
-         * Set it high again, then wait for the sensor to put out a low pulse.
-         */
-        gpio_set_value(gpio, 0);
-        udelay(1000);
+	/*
+	 * Set pin low and wait for at least 800 us.
+	 * Set it high again, then wait for the sensor to put out a low pulse.
+	 */
+	gpio_set_value(gpio, 0);
+	udelay(1000);
 
 	// Disable interrupts during measurement, this is critical for 
 	// reliable time measurements when receiving high speed data.
@@ -103,14 +103,14 @@ static int am2301_show(struct seq_file *m, void *v)
 
 	local_irq_disable();
 
-        gpio_set_value(gpio, 1);
+	gpio_set_value(gpio, 1);
 
 	gpio_direction_input(gpio);
 
 	nodata_error |= wait_for_gpio(LOW);
 	nodata_error |= wait_for_gpio(HIGH);
 	nodata_error |= wait_for_gpio(LOW);
- 			
+			
 	
 	for ( i=0; i<40; i++) {
 		wait_for_gpio(HIGH);
@@ -131,16 +131,16 @@ static int am2301_show(struct seq_file *m, void *v)
 		if (d==8) {
 			d=0;
 			data[b]=databyte;
-		b=b+1;
-		databyte=0x00;
+			b=b+1;
+			databyte=0x00;
+		}
+		databyte<<=1;		
 	}
-	databyte<<=1;		
-}
 
-local_irq_enable();
-wait_for_gpio(HIGH);
+	local_irq_enable();
+	wait_for_gpio(HIGH);
 
-        gpio_direction_output(gpio, 1);
+	gpio_direction_output(gpio, 1);
 	
 	if (((data[0] + data[1] + data[2] + data[3]) & 0xff) == data[4]) {
 		strcpy(status, "ok");
@@ -163,7 +163,7 @@ wait_for_gpio(HIGH);
 		seq_printf(m, "%d.%d RH, %d.%d C, %s\n", rh/10, rh%10, t/10, t%10, status);
 	}
 
-        return 0;
+		return 0;
 }
 
 
@@ -210,7 +210,7 @@ static int __init am2301_init(void)
 
 static void __exit am2301_exit(void)
 {
- 	(void) gpio_direction_output(gpio, 1);
+	(void) gpio_direction_output(gpio, 1);
 	gpio_free(gpio);
 
 	remove_proc_entry("am2301", NULL);
@@ -230,4 +230,3 @@ MODULE_DESCRIPTION("AM2301 (DHT21) driver");
 module_param(gpio, int, S_IRUGO);
 
 MODULE_PARM_DESC(gpio, "Pin number for data input and output, assuming GPIO24 (Raspberry Model B physical pin #18)");
-
