@@ -6,7 +6,7 @@ obj-m := $(MOD).o
 
 
 all:
-	ARCH=arm CROSS_COMPILE=${CCPREFIX} $(MAKE) -C ${KERNEL_SRC} M=$(PWD) modules
+	ARCH=arm CROSS_COMPILE=${CCPREFIX} $(MAKE) -C ${KERNEL_SRC} M=$(CURDIR) modules
 
 clean:
-	ARCH=arm CROSS_COMPILE=${CCPREFIX} $(MAKE) -C ${KERNEL_SRC} M=$(PWD) clean
+	ARCH=arm CROSS_COMPILE=${CCPREFIX} $(MAKE) -C ${KERNEL_SRC} M=$(CURDIR) clean
